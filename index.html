@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>🌿 Plant Pot Calculator</title>
+
+<style>
+  body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, #d9f7d9, #eaf6ff);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+  }
+
+  .app {
+    background: white;
+    padding: 28px;
+    border-radius: 18px;
+    width: 360px;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.12);
+  }
+
+  h1 {
+    text-align: center;
+    font-size: 22px;
+    margin-bottom: 18px;
+  }
+
+  label {
+    font-size: 13px;
+    color: #444;
+  }
+
+  input, select {
+    width: 100%;
+    padding: 10px;
+    margin: 6px 0 14px 0;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+    outline: none;
+  }
+
+  input:focus, select:focus {
+    border-color: #4caf50;
+  }
+
+  button {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 10px;
+    background: #4caf50;
+    color: white;
+    font-size: 15px;
+    cursor: pointer;
+  }
+
+  button:hover {
+    background: #3f9d44;
+  }
+
+  .result {
+    margin-top: 18px;
+    padding: 14px;
+    background: #f1f8e9;
+    border-radius: 12px;
+    font-weight: bold;
+    color: #2e7d32;
+    text-align: center;
+  }
+
+  .hint {
+    margin-top: 10px;
+    font-size: 12px;
+    color: #555;
+    text-align: center;
+  }
+</style>
+</head>
+
+<body>
+
+<div class="app">
+  <h1>🌿 Plant Pot Calculator</h1>
+
+  <label>Kształt doniczki</label>
+  <select id="ksztalt" onchange="toggleFields()">
+    <option value="walec">🌱 Walec</option>
+    <option value="kwadrat">🪴 Kwadrat</option>
+  </select>
+
+  <label>Roślina</label>
+  <select id="roslina">
+    <option value="uniwersalne">Uniwersalne podłoże</option>
+    <option value="monstera">Monstera</option>
+    <option value="fikus">Fikus</option>
+    <option value="kaktus">Kaktus</option>
+    <option value="storczyk">Storczyk</option>
+  </select>
+
+  <div id="walecFields">
+    <label>Średnica (cm)</label>
+    <input id="srednica" type="number" placeholder="np. 20">
+  </div>
+
+  <div id="kwadratFields" style="display:none;">
+    <label>Szerokość (cm)</label>
+    <input id="szerokosc" type="number" placeholder="np. 20">
+  </div>
+
+  <label>Wysokość (cm)</label>
+  <input id="wysokosc" type="number" placeholder="np. 25">
+
+  <button onclick="oblicz()">Oblicz 🌿</button>
+
+  <div class="result" id="wynik">
+    Wpisz dane i kliknij „Oblicz”
+  </div>
+
+  <div class="hint" id="hint"></div>
+</div>
+
+<script>
+function toggleFields() {
+  let k = document.getElementById("ksztalt").value;
+
+  document.getElementById("walecFields").style.display =
+    k === "walec" ? "block" : "none";
+
+  document.getElementById("kwadratFields").style.display =
+    k === "kwadrat" ? "block" : "none";
+}
+
+function oblicz() {
+  let k = document.getElementById("ksztalt").value;
+  let h = parseFloat(document.getElementById("wysokosc").value);
+  let roslina = document.getElementById("roslina").value;
+
+  let V = 0;
+
+  if (k === "walec") {
+    let d = parseFloat(document.getElementById("srednica").value);
+    if (!d || !h) return blad();
+
+    let r = d / 2;
+    V = Math.PI * r * r * h;
+  } else {
+    let a = parseFloat(document.getElementById("szerokosc").value);
+    if (!a || !h) return blad();
+
+    V = a * a * h;
+  }
+
+  let litry = V / 1000;
+
+  let sugestia = "";
+
+  switch (roslina) {
+    case "monstera":
+      sugestia = "🌿 Monstera lubi przepuszczalne, lekko wilgotne podłoże.";
+      break;
+    case "fikus":
+      sugestia = "🌿 Fikus: ziemia uniwersalna z drenażem.";
+      break;
+    case "kaktus":
+      sugestia = "🌵 Kaktus: bardzo przepuszczalne, mineralne podłoże.";
+      break;
+    case "storczyk":
+      sugestia = "🌸 Storczyk: specjalne podłoże z korą.";
+      break;
+    default:
+      sugestia = "🌿 Uniwersalne podłoże będzie OK.";
+  }
+
+  document.getElementById("wynik").innerText =
+    "📦 Potrzebujesz ok. " + litry.toFixed(1) + " L podłoża";
+
+  document.getElementById("hint").innerText = sugestia;
+}
+
+function blad() {
+  document.getElementById("wynik").innerText =
+    "⚠️ Wpisz wszystkie dane poprawnie";
+  document.getElementById("hint").innerText = "";
+}
+</script>
+
+</body>
+</html>
